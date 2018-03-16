@@ -4,6 +4,7 @@
 #
 # 这个文件会被 byfn.sh 的 replacePrivateKey() 函数生成实际的 docker-compose-e2e.yaml。
 # 然后被 sed 命令另作他用。
+# 这个文件的 order.example.com 之类的文件无需修改，也就是说这个文件实际上不影响端到端测试？
 version: '2'
 
 volumes:
