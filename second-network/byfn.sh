@@ -162,9 +162,12 @@ function replacePrivateKey () {
   # The next steps will replace the template's contents with the
   # actual values of the private key file names for the two CAs.
   CURRENT_DIR=$PWD
+  # 这个目录下永远只有一个私钥
   cd crypto-config/peerOrganizations/org1.example.com/ca/
+  # 这一行代码拷贝到普通的 shell 里面也可以 echo 出值来
   PRIV_KEY=$(ls *_sk)
   cd "$CURRENT_DIR"
+  # 这里用 sed 的模式直接替换掉这个文件里所有的 CA1_PRIVATE_KEY 占位符
   sed $OPTS "s/CA1_PRIVATE_KEY/${PRIV_KEY}/g" docker-compose-e2e.yaml
   cd crypto-config/peerOrganizations/org2.example.com/ca/
   PRIV_KEY=$(ls *_sk)

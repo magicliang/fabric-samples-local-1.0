@@ -2,27 +2,34 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 #
-
+# 当前 compose 语法已经升级到了 version 3了。
 version: '2'
 
+# 官方文档的释义，大义是顶级的 volume 元素是为了在不同的 service 之间共享 volume 而准备的。
+# You can mount a host path as part of a definition for a single service, and there is no need to define it in the top level volumes key.
+# But, if you want to reuse a volume across multiple services, then define a named volume in the top-level volumes key. Use named volumes with services, swarms, and stack files.
 volumes:
-  orderer.example.com:
+  # 这个语法相当于声明了若干个命名卷。不同的容器之间把相同的卷挂载到自己本地的路径里，就相当于打通了两个容器的数据共享。
+  # 注意，命名卷的开头并不是路径形式的，所以不要求当前的 host 有这个名字的绝对路径或者相对路径。
+  orderer.abc:
   peer0.org1.example.com:
   peer1.org1.example.com:
   peer0.org2.example.com:
   peer1.org2.example.com:
 
+# 一个顶级网络名称，供服务之间引用
 networks:
   byfn:
 
 services:
-
-  orderer.example.com:
+  orderer.abc:
     extends:
       file:   base/docker-compose-base.yaml
-      service: orderer.example.com
-    container_name: orderer.example.com
+      service: orderer.abc
+    # 在这里虽然可以覆盖 container name，但有必要么？
+    container_name: orderer.abc
     networks:
+      # 这是要加入的网络名称
       - byfn
 
   peer0.org1.example.com:
@@ -59,6 +66,7 @@ services:
 
   cli:
     container_name: cli
+    # 这里不继承任何配置文件，而是直接使用镜像初始化容器
     image: hyperledger/fabric-tools:$IMAGE_TAG
     tty: true
     environment:
@@ -76,13 +84,17 @@ services:
     working_dir: /opt/gopath/src/github.com/hyperledger/fabric/peer
     command: /bin/bash -c './scripts/script.sh ${CHANNEL_NAME} ${DELAY}; sleep $TIMEOUT'
     volumes:
+        # host 上路径: 容器内路径
+        # 映射本机的运行时配置文件到容器内。
         - /var/run/:/host/var/run/
+        # ：这就是链码的主要位置了，看来这个目录也是镜像里就写死的，要写自定义的链码也只能从这里安装进去。
         - ./../chaincode/:/opt/gopath/src/github.com/hyperledger/fabric/examples/chaincode/go
         - ./crypto-config:/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/
         - ./scripts:/opt/gopath/src/github.com/hyperledger/fabric/peer/scripts/
         - ./channel-artifacts:/opt/gopath/src/github.com/hyperledger/fabric/peer/channel-artifacts
     depends_on:
-      - orderer.example.com
+      # 等这些 service 启动完了，再启动自己这个 service。
+      - orderer.abc
       - peer0.org1.example.com
       - peer1.org1.example.com
       - peer0.org2.example.com

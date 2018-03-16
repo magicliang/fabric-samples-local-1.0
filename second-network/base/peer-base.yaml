@@ -2,7 +2,7 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 #
-
+# 这个文件夹是纯净的，与 example 组织无关。
 version: '2'
 
 services:
@@ -10,6 +10,7 @@ services:
     image: hyperledger/fabric-peer:$IMAGE_TAG
     environment:
       - CORE_VM_ENDPOINT=unix:///host/var/run/docker.sock
+      # 用默认的网桥网络来启动链码容器。
       # the following setting starts chaincode containers on the same
       # bridge network as the peers
       # https://docs.docker.com/compose/networking/
