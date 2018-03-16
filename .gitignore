@@ -24,3 +24,4 @@ fabcar/node_modules/
 balance-transfer/.DS_Store
 balance-transfer/node_modules/*
 first-network/docker-compose-e2e.yaml
+*_backup

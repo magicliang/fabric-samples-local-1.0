@@ -1,6 +1,14 @@
 #!/bin/bash
-
 # TODO: change this into a python file
+
+# $0 是脚本名，$0 才是参数名
+
+echo "chaning ORDERER_DOMAIN to $1"
+
+if [ ! -z "$1" -a "$1" != " " ]; then
+
+echo "chaning ORDERER_DOMAIN to $1"
+
 FILES="./base/docker-compose-base.yaml
 ./configtx.yaml
 ./crypto-config.yaml
@@ -8,6 +16,9 @@ FILES="./base/docker-compose-base.yaml
 ./scripts/script.sh"
 for f in $FILES
 do
-	sed -it "s/tencent.com/ORDERER_DOMAIN/g" $f
-	rm "${f}t"
+
+	sed -i_backup "s/ORDERER_DOMAIN/$1/g" $f
+	# rm "${f}_backup"
 done
+
+fi
