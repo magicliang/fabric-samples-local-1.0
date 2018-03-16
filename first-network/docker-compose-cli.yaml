@@ -11,7 +11,7 @@ version: '2'
 volumes:
   # 这个语法相当于声明了若干个命名卷。不同的容器之间把相同的卷挂载到自己本地的路径里，就相当于打通了两个容器的数据共享。
   # 注意，命名卷的开头并不是路径形式的，所以不要求当前的 host 有这个名字的绝对路径或者相对路径。
-  orderer.example.com:
+  orderer.tencent.com:
   peer0.org1.example.com:
   peer1.org1.example.com:
   peer0.org2.example.com:
@@ -22,12 +22,12 @@ networks:
   byfn:
 
 services:
-  orderer.example.com:
+  orderer.tencent.com:
     extends:
       file:   base/docker-compose-base.yaml
-      service: orderer.example.com
+      service: orderer.tencent.com
     # 在这里虽然可以覆盖 container name，但有必要么？
-    container_name: orderer.example.com
+    container_name: orderer.tencent.com
     networks:
       # 这是要加入的网络名称
       - byfn
@@ -94,7 +94,7 @@ services:
         - ./channel-artifacts:/opt/gopath/src/github.com/hyperledger/fabric/peer/channel-artifacts
     depends_on:
       # 等这些 service 启动完了，再启动自己这个 service。
-      - orderer.example.com
+      - orderer.tencent.com
       - peer0.org1.example.com
       - peer1.org1.example.com
       - peer0.org2.example.com

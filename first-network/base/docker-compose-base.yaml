@@ -7,8 +7,8 @@ version: '2'
 
 services:
   # orderer 的配置
-  orderer.example.com:
-    container_name: orderer.example.com
+  orderer.tencent.com:
+    container_name: orderer.tencent.com
     image: hyperledger/fabric-orderer:$IMAGE_TAG
     environment:
       - ORDERER_GENERAL_LOGLEVEL=debug
@@ -33,11 +33,11 @@ services:
     # 对创世区块的映射  
     - ../channel-artifacts/genesis.block:/var/hyperledger/orderer/orderer.genesis.block
     # 对 msp 文件夹的映射
-    - ../crypto-config/ordererOrganizations/example.com/orderers/orderer.example.com/msp:/var/hyperledger/orderer/msp
+    - ../crypto-config/ordererOrganizations/tencent.com/orderers/orderer.tencent.com/msp:/var/hyperledger/orderer/msp
     # 对 tls 文件夹的映射
-    - ../crypto-config/ordererOrganizations/example.com/orderers/orderer.example.com/tls/:/var/hyperledger/orderer/tls
+    - ../crypto-config/ordererOrganizations/tencent.com/orderers/orderer.tencent.com/tls/:/var/hyperledger/orderer/tls
     # 注意，这一步需要的命名卷，实际上就是要在 docker-compose-cli 里被顶层 volume 实例化
-    - orderer.example.com:/var/hyperledger/production/orderer
+    - orderer.tencent.com:/var/hyperledger/production/orderer
     ports:
       - 7050:7050
 
