@@ -30,6 +30,8 @@
 # prepending $PWD/../bin to PATH to ensure we are picking up the correct binaries
 # this may be commented out to resolve installed version of tools if desired
 export PATH=${PWD}/../bin:${PWD}:$PATH
+# 这个环境变量很重要，这里的 export 保证这个变量是在 environment 里。可以被子进程（另一个 shell 脚本继承）。
+# 并不是所有的父进程里的 variable 都会被子进程看到的。
 export FABRIC_CFG_PATH=${PWD}
 
 # Print the usage message
@@ -52,15 +54,15 @@ function printHelp () {
   echo "Typically, one would first generate the required certificates and "
   echo "genesis block, then bring up the network. e.g.:"
   echo
-  echo "	byfn.sh -m generate -c mychannel"
-  echo "	byfn.sh -m up -c mychannel -s couchdb"
-  echo "	byfn.sh -m up -c mychannel -s couchdb -i 1.0.6"
-  echo "	byfn.sh -m down -c mychannel"
+  echo "  byfn.sh -m generate -c mychannel"
+  echo "  byfn.sh -m up -c mychannel -s couchdb"
+  echo "  byfn.sh -m up -c mychannel -s couchdb -i 1.0.6"
+  echo "  byfn.sh -m down -c mychannel"
   echo
   echo "Taking all defaults:"
-  echo "	byfn.sh -m generate"
-  echo "	byfn.sh -m up"
-  echo "	byfn.sh -m down"
+  echo "  byfn.sh -m generate"
+  echo "  byfn.sh -m up"
+  echo "  byfn.sh -m down"
 }
 
 # Ask user for confirmation to proceed
@@ -68,13 +70,16 @@ function askProceed () {
   read -p "Continue (y/n)? " ans
   case "$ans" in
     y|Y )
+      # 只有这个地方会正常走下去
       echo "proceeding ..."
+    # 这个双分号是 case 的休止符
     ;;
     n|N )
       echo "exiting..."
       exit 1
     ;;
     * )
+      # 这里会递归
       echo "invalid response"
       askProceed
     ;;
@@ -84,10 +89,22 @@ function askProceed () {
 # Obtain CONTAINER_IDS and remove them
 # TODO Might want to make this optional - could clear other containers
 function clearContainers () {
+  # -a 表示输出全部容器，-q 表示只输出容器 id，这样就可以迭代使用了
+  # 结果大概是这样
+  # 8a25b455f05e
+  # d2d84545a902
+  # c67d337e5bd9
+  # e5cbd8457caf
+  # 9ee6a1cb33c1
+  # a0df580d4633
+  # cb6b441b083f
+  # 0c87d55710c8
+  # c24f3eb2e0e0
   CONTAINER_IDS=$(docker ps -aq)
   if [ -z "$CONTAINER_IDS" -o "$CONTAINER_IDS" == " " ]; then
     echo "---- No containers available for deletion ----"
   else
+    # 直接拿这个列表来 rm，而不用再 xargs 了。
     docker rm -f $CONTAINER_IDS
   fi
 }
@@ -162,12 +179,9 @@ function replacePrivateKey () {
   # The next steps will replace the template's contents with the
   # actual values of the private key file names for the two CAs.
   CURRENT_DIR=$PWD
-  # 这个目录下永远只有一个私钥
   cd crypto-config/peerOrganizations/org1.example.com/ca/
-  # 这一行代码拷贝到普通的 shell 里面也可以 echo 出值来
   PRIV_KEY=$(ls *_sk)
   cd "$CURRENT_DIR"
-  # 这里用 sed 的模式直接替换掉这个文件里所有的 CA1_PRIVATE_KEY 占位符
   sed $OPTS "s/CA1_PRIVATE_KEY/${PRIV_KEY}/g" docker-compose-e2e.yaml
   cd crypto-config/peerOrganizations/org2.example.com/ca/
   PRIV_KEY=$(ls *_sk)
@@ -306,6 +320,7 @@ function generateChannelArtifacts() {
   echo
 }
 
+# 定义完函数以后，这里才是程序的起点
 # Obtain the OS and Architecture string that will be used to select the correct
 # native binaries for your platform
 OS_ARCH=$(echo "$(uname -s|tr '[:upper:]' '[:lower:]'|sed 's/mingw64_nt.*/windows/')-$(uname -m | sed 's/x86_64/amd64/g')" | awk '{print tolower($0)}')

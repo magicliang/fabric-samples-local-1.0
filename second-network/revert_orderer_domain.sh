@@ -10,5 +10,6 @@ do
 	# 不需要 rm，因为 mv 就直接把两个文件变成一个了
 	mv "$f"_backup "$f"
 	#rm "$f"_backup
-	#git checkout $f
+	# in case of absence of *_backup files.
+	git checkout $f
 done
