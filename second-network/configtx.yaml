@@ -16,6 +16,7 @@ Profiles:
 
     TwoOrgsOrdererGenesis:
         Orderer:
+            # 按照 YAML 的语法，这是对 anchor 的引用
             <<: *OrdererDefaults
             Organizations:
                 - *OrdererOrg
@@ -53,7 +54,7 @@ Organizations:
         ID: OrdererMSP
 
         # MSPDir is the filesystem path which contains the MSP configuration
-        MSPDir: crypto-config/ordererOrganizations/abc/msp
+        MSPDir: crypto-config/ordererOrganizations/ORDERER_DOMAIN/msp
 
     - &Org1
         # DefaultOrg defines the organization which is used in the sampleconfig
@@ -97,6 +98,7 @@ Organizations:
 #   genesis block for orderer related parameters
 #
 ################################################################################
+# 这里就是 anchor 了。
 Orderer: &OrdererDefaults
 
     # Orderer Type: The orderer implementation to start
@@ -104,7 +106,7 @@ Orderer: &OrdererDefaults
     OrdererType: solo
 
     Addresses:
-        - orderer.abc:7050
+        - orderer.ORDERER_DOMAIN:7050
 
     # Batch Timeout: The amount of time to wait before creating a batch
     BatchTimeout: 2s
