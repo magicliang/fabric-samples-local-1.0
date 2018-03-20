@@ -7,7 +7,7 @@ echo "\___ \    | |     / _ \   | |_) |   | |  "
 echo " ___) |   | |    / ___ \  |  _ <    | |  "
 echo "|____/    |_|   /_/   \_\ |_| \_\   |_|  "
 echo
-echo "Build your first network (BYFN) end-to-end test"
+echo "Build fabric custom network end-to-end test"
 echo
 CHANNEL_NAME="$1"
 DELAY="$2"
@@ -261,7 +261,7 @@ echo "Querying chaincode on org2/peer3..."
 chaincodeQuery 3 90
 
 echo
-echo "========= All GOOD, BYFN execution completed =========== "
+echo "========= All GOOD, execution completed =========== "
 echo
 
 echo
