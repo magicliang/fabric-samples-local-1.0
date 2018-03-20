@@ -84,22 +84,22 @@ services:
       - 8051:7051
       - 8053:7053
 
-  peer0.org2.example.com:
-    container_name: peer0.org2.example.com
+  peer0.ORG2_DOMAIN:
+    container_name: peer0.ORG2_DOMAIN
     extends:
       file: peer-base.yaml
       service: peer-base
     environment:
-      - CORE_PEER_ID=peer0.org2.example.com
-      - CORE_PEER_ADDRESS=peer0.org2.example.com:7051
-      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer0.org2.example.com:7051
-      - CORE_PEER_GOSSIP_BOOTSTRAP=peer0.org2.example.com:7051
+      - CORE_PEER_ID=peer0.ORG2_DOMAIN
+      - CORE_PEER_ADDRESS=peer0.ORG2_DOMAIN:7051
+      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer0.ORG2_DOMAIN:7051
+      - CORE_PEER_GOSSIP_BOOTSTRAP=peer0.ORG2_DOMAIN:7051
       - CORE_PEER_LOCALMSPID=Org2MSP
     volumes:
         - /var/run/:/host/var/run/
-        - ../crypto-config/peerOrganizations/org2.example.com/peers/peer0.org2.example.com/msp:/etc/hyperledger/fabric/msp
-        - ../crypto-config/peerOrganizations/org2.example.com/peers/peer0.org2.example.com/tls:/etc/hyperledger/fabric/tls
-        - peer0.org2.example.com:/var/hyperledger/production
+        - ../crypto-config/peerOrganizations/ORG2_DOMAIN/peers/peer0.ORG2_DOMAIN/msp:/etc/hyperledger/fabric/msp
+        - ../crypto-config/peerOrganizations/ORG2_DOMAIN/peers/peer0.ORG2_DOMAIN/tls:/etc/hyperledger/fabric/tls
+        - peer0.ORG2_DOMAIN:/var/hyperledger/production
     ports:
       - 9051:7051
       - 9053:7053
@@ -108,22 +108,22 @@ services:
   # 2 修改 container_name
   # 3 修改本 peer 地址
   # 4 修改 gossip 相关，实际上还是本机地址
-  peer1.org2.example.com:
-    container_name: peer1.org2.example.com
+  peer1.ORG2_DOMAIN:
+    container_name: peer1.ORG2_DOMAIN
     extends:
       file: peer-base.yaml
       service: peer-base
     environment:
-      - CORE_PEER_ID=peer1.org2.example.com
-      - CORE_PEER_ADDRESS=peer1.org2.example.com:7051
-      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer1.org2.example.com:7051
-      - CORE_PEER_GOSSIP_BOOTSTRAP=peer1.org2.example.com:7051
+      - CORE_PEER_ID=peer1.ORG2_DOMAIN
+      - CORE_PEER_ADDRESS=peer1.ORG2_DOMAIN:7051
+      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer1.ORG2_DOMAIN:7051
+      - CORE_PEER_GOSSIP_BOOTSTRAP=peer1.ORG2_DOMAIN:7051
       - CORE_PEER_LOCALMSPID=Org2MSP
     volumes:
         - /var/run/:/host/var/run/
-        - ../crypto-config/peerOrganizations/org2.example.com/peers/peer1.org2.example.com/msp:/etc/hyperledger/fabric/msp
-        - ../crypto-config/peerOrganizations/org2.example.com/peers/peer1.org2.example.com/tls:/etc/hyperledger/fabric/tls
-        - peer1.org2.example.com:/var/hyperledger/production
+        - ../crypto-config/peerOrganizations/ORG2_DOMAIN/peers/peer1.ORG2_DOMAIN/msp:/etc/hyperledger/fabric/msp
+        - ../crypto-config/peerOrganizations/ORG2_DOMAIN/peers/peer1.ORG2_DOMAIN/tls:/etc/hyperledger/fabric/tls
+        - peer1.ORG2_DOMAIN:/var/hyperledger/production
     ports:
       - 10051:7051
       - 10053:7053

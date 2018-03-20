@@ -14,8 +14,8 @@ volumes:
   orderer.ORDERER_DOMAIN:
   peer0.ORG1_DOMAIN:
   peer1.ORG1_DOMAIN:
-  peer0.org2.example.com:
-  peer1.org2.example.com:
+  peer0.ORG2_DOMAIN:
+  peer1.ORG2_DOMAIN:
 
 # 一个顶级网络名称，供服务之间引用
 networks:
@@ -48,19 +48,19 @@ services:
     networks:
       - byfn
 
-  peer0.org2.example.com:
-    container_name: peer0.org2.example.com
+  peer0.ORG2_DOMAIN:
+    container_name: peer0.ORG2_DOMAIN
     extends:
       file:  base/docker-compose-base.yaml
-      service: peer0.org2.example.com
+      service: peer0.ORG2_DOMAIN
     networks:
       - byfn
 
-  peer1.org2.example.com:
-    container_name: peer1.org2.example.com
+  peer1.ORG2_DOMAIN:
+    container_name: peer1.ORG2_DOMAIN
     extends:
       file:  base/docker-compose-base.yaml
-      service: peer1.org2.example.com
+      service: peer1.ORG2_DOMAIN
     networks:
       - byfn
 
@@ -99,8 +99,8 @@ services:
       - orderer.ORDERER_DOMAIN
       - peer0.ORG1_DOMAIN
       - peer1.ORG1_DOMAIN
-      - peer0.org2.example.com
-      - peer1.org2.example.com
+      - peer0.ORG2_DOMAIN
+      - peer1.ORG2_DOMAIN
     networks:
       - byfn
 
