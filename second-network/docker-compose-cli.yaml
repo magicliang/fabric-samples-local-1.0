@@ -82,6 +82,8 @@ services:
       - CORE_PEER_TLS_ROOTCERT_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls/ca.crt
       - CORE_PEER_MSPCONFIGPATH=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org1.example.com/users/Admin@org1.example.com/msp
     working_dir: /opt/gopath/src/github.com/hyperledger/fabric/peer
+    # 容器运行的时候，就会在内部的 console 里启动这段命令。类似我们经常 docker run 使用的 /bin/bash 一样。
+    # 在这里我们传导了两个关键的环境变量进去，一个频道名，一个延迟。这也是目前唯二的还能在 cli 容器启动时改变的东西了。
     command: /bin/bash -c './scripts/script.sh ${CHANNEL_NAME} ${DELAY}; sleep $TIMEOUT'
     volumes:
         # host 上路径: 容器内路径

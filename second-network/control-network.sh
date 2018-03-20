@@ -137,6 +137,8 @@ function networkUp () {
   if [ "${IF_COUCHDB}" == "couchdb" ]; then
       IMAGE_TAG=$IMAGETAG CHANNEL_NAME=$CHANNEL_NAME TIMEOUT=$CLI_TIMEOUT DELAY=$CLI_DELAY docker-compose -f $COMPOSE_FILE -f $COMPOSE_FILE_COUCH up -d 2>&1
   else
+      # 这一行让 Docker-Compose 来按照配置文件装配容器配置，生成由容器组成的项目网络
+      # cli 容器起来以后，会自己去创建频道、一个一个地把容器加入网络中。一个一个地初始化链码，一个一个地测试链码。
       IMAGE_TAG=$IMAGETAG CHANNEL_NAME=$CHANNEL_NAME TIMEOUT=$CLI_TIMEOUT DELAY=$CLI_DELAY docker-compose -f $COMPOSE_FILE up -d 2>&1
   fi
   if [ $? -ne 0 ]; then
@@ -205,6 +207,7 @@ function replacePrivateKey () {
 # ca-cert 是根证书。
 # 为什么 count 必须放在这个文件里面。
 # 这个函数不止生成证书，还有 keystore。
+# 私钥签署，公钥验证！而不是公钥签署，私钥验证！
 # We will use the cryptogen tool to generate the cryptographic material (x509 certs)
 # for our various network entities.  The certificates are based on a standard PKI
 # implementation where validation is achieved by reaching a common trust anchor.
@@ -246,6 +249,9 @@ function generateCerts (){
 
 # 每一个新的 org 都要有一个 anchor 节点。这也就意味着不仅配置文件里要有相关的配置，也意味着初始化步骤里
 # 要有相关的配置命令。
+# 把三件事做起来：
+# 1 生成创世区块。 2 生成频道配置 3 配置锚节点。
+#
 # The `configtxgen tool is used to create four artifacts: orderer **bootstrap
 # block**, fabric **channel configuration transaction**, and two **anchor
 # peer transactions** - one for each Peer Org.
@@ -297,6 +303,7 @@ function generateChannelArtifacts() {
   echo "##########################################################"
   # Note: For some unknown reason (at least for now) the block file can't be
   # named orderer.genesis.block or the orderer will fail to launch!
+  # 1 生成创世区块
   configtxgen -profile TwoOrgsOrdererGenesis -outputBlock ./channel-artifacts/genesis.block
   if [ "$?" -ne 0 ]; then
     echo "Failed to generate orderer genesis block..."
@@ -306,6 +313,7 @@ function generateChannelArtifacts() {
   echo "#################################################################"
   echo "### Generating channel configuration transaction 'channel.tx' ###"
   echo "#################################################################"
+  # 2 生成频道配置，实际上就是 channel 事务。
   configtxgen -profile TwoOrgsChannel -outputCreateChannelTx ./channel-artifacts/channel.tx -channelID $CHANNEL_NAME
   if [ "$?" -ne 0 ]; then
     echo "Failed to generate channel configuration transaction..."
@@ -316,6 +324,8 @@ function generateChannelArtifacts() {
   echo "#################################################################"
   echo "#######    Generating anchor peer update for Org1MSP   ##########"
   echo "#################################################################"
+  # configtxgen -help 可以看到它的各种 options。其中 outputAnchorPeersUpdate 只能在创建缺省频道（实际上自定义频道也可以），和最初建 anchor 时才可以使用。
+  # 这个 channel 名和 asOrg 参数共同决定 Org1MSPanchors.tx 的内容。
   configtxgen -profile TwoOrgsChannel -outputAnchorPeersUpdate ./channel-artifacts/Org1MSPanchors.tx -channelID $CHANNEL_NAME -asOrg Org1MSP
   if [ "$?" -ne 0 ]; then
     echo "Failed to generate anchor peer update for Org1MSP..."
