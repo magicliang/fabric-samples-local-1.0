@@ -34,15 +34,15 @@ setGlobals () {
 
 	if [ $1 -eq 0 -o $1 -eq 1 ] ; then
 		CORE_PEER_LOCALMSPID="Org1MSP"
-		CORE_PEER_TLS_ROOTCERT_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls/ca.crt
-		CORE_PEER_MSPCONFIGPATH=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org1.example.com/users/Admin@org1.example.com/msp
+		CORE_PEER_TLS_ROOTCERT_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/ORG1_DOMAIN/peers/peer0.ORG1_DOMAIN/tls/ca.crt
+		CORE_PEER_MSPCONFIGPATH=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/ORG1_DOMAIN/users/Admin@ORG1_DOMAIN/msp
 		# 传进来不同的命令，更改的核心环境变量指标是容器的 endpoint 地址。也就是CORE_PEER_ADDRESS。相同组织的 enpoint 使用的是相同的 MSP 密码学目录。
 		if [ $1 -eq 0 ]; then
-			CORE_PEER_ADDRESS=peer0.org1.example.com:7051
+			CORE_PEER_ADDRESS=peer0.ORG1_DOMAIN:7051
 		else
-			CORE_PEER_ADDRESS=peer1.org1.example.com:7051
+			CORE_PEER_ADDRESS=peer1.ORG1_DOMAIN:7051
 			# 此处有重复，疑为错误。但 github 上原版的代码就是这样写的。
-			CORE_PEER_MSPCONFIGPATH=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org1.example.com/users/Admin@org1.example.com/msp
+			CORE_PEER_MSPCONFIGPATH=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/ORG1_DOMAIN/users/Admin@ORG1_DOMAIN/msp
 		fi
 	else
 		CORE_PEER_LOCALMSPID="Org2MSP"
