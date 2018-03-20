@@ -1,3 +1,5 @@
+#!/bin/bash
+
 FILES="./base/docker-compose-base.yaml
 ./configtx.yaml
 ./control-network.sh

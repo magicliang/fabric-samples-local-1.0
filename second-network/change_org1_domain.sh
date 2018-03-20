@@ -1,3 +1,5 @@
+#!/bin/bash
+
 echo "chaning ORG1_DOMAIN to $1"
 
 if [ ! -z "$1" -a "$1" != " " ]; then
