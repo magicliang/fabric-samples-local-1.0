@@ -14,7 +14,7 @@ services:
       - ORDERER_GENERAL_LOGLEVEL=debug
       - ORDERER_GENERAL_LISTENADDRESS=0.0.0.0
       - ORDERER_GENERAL_GENESISMETHOD=file
-      # 这个给 orderer 准备的创世区块，看下面的 volumes 的映射
+      # 这个给 orderer 准备的创世区块，看下面的 volumes 的映射。
       - ORDERER_GENERAL_GENESISFILE=/var/hyperledger/orderer/orderer.genesis.block
       - ORDERER_GENERAL_LOCALMSPID=OrdererMSP
       - ORDERER_GENERAL_LOCALMSPDIR=/var/hyperledger/orderer/msp
@@ -30,7 +30,7 @@ services:
     # 启动命令，不像 peer，不再需要加参数了。
     command: orderer
     volumes:
-    # 对创世区块的映射  
+    # 对创世区块的映射，注意看，这里通过映射，实现了重命名。
     - ../channel-artifacts/genesis.block:/var/hyperledger/orderer/orderer.genesis.block
     # 对 msp 文件夹的映射
     - ../crypto-config/ordererOrganizations/ORDERER_DOMAIN/orderers/orderer.ORDERER_DOMAIN/msp:/var/hyperledger/orderer/msp
@@ -40,7 +40,7 @@ services:
     - orderer.ORDERER_DOMAIN:/var/hyperledger/production/orderer
     ports:
       - 7050:7050
-
+  # 这里的 peer 数量，完全是按照crypto-config 里面的 spec 来的
   peer0.ORG1_DOMAIN:
     # 经典的继承语法
     container_name: peer0.ORG1_DOMAIN
@@ -127,3 +127,44 @@ services:
     ports:
       - 10051:7051
       - 10053:7053
+
+  # 新加入的 org3，可选初始化
+  peer0.ORG3_DOMAIN:
+    container_name: peer0.ORG3_DOMAIN
+    extends:
+      file: peer-base.yaml
+      service: peer-base
+    environment:
+      - CORE_PEER_ID=peer0.ORG3_DOMAIN
+      - CORE_PEER_ADDRESS=peer0.ORG3_DOMAIN:7051
+      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer0.ORG3_DOMAIN:7051
+      - CORE_PEER_GOSSIP_BOOTSTRAP=peer0.ORG3_DOMAIN:7051
+      - CORE_PEER_LOCALMSPID=Org3MSP
+    volumes:
+        - /var/run/:/host/var/run/
+        - ../crypto-config/peerOrganizations/ORG3_DOMAIN/peers/peer0.ORG3_DOMAIN/msp:/etc/hyperledger/fabric/msp
+        - ../crypto-config/peerOrganizations/ORG3_DOMAIN/peers/peer0.ORG3_DOMAIN/tls:/etc/hyperledger/fabric/tls
+        - peer0.ORG3_DOMAIN:/var/hyperledger/production
+    ports:
+      - 11051:7051
+      - 11053:7053
+
+  peer1.ORG3_DOMAIN:
+    container_name: peer1.ORG3_DOMAIN
+    extends:
+      file: peer-base.yaml
+      service: peer-base
+    environment:
+      - CORE_PEER_ID=peer1.ORG3_DOMAIN
+      - CORE_PEER_ADDRESS=peer1.ORG3_DOMAIN:7051
+      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer1.ORG3_DOMAIN:7051
+      - CORE_PEER_GOSSIP_BOOTSTRAP=peer1.ORG3_DOMAIN:7051
+      - CORE_PEER_LOCALMSPID=Org3MSP
+    volumes:
+        - /var/run/:/host/var/run/
+        - ../crypto-config/peerOrganizations/ORG3_DOMAIN/peers/peer1.ORG3_DOMAIN/msp:/etc/hyperledger/fabric/msp
+        - ../crypto-config/peerOrganizations/ORG3_DOMAIN/peers/peer1.ORG3_DOMAIN/tls:/etc/hyperledger/fabric/tls
+        - peer1.ORG3_DOMAIN:/var/hyperledger/production
+    ports:
+      - 12051:7051
+      - 12053:7053

@@ -138,6 +138,7 @@ installChaincode () {
 	setGlobals $PEER
 	# 这里这个 p 就是在cli 容器内可以看到的 chaincode 的 go 文件路径了。n 则是链码的合约名字。
 	# 这个链码为什么不需要经过编译，真是奇也怪哉。
+	# install 只指定了 peer 节点，没有指定通道，可见安装上去可以在多个通道上初始化和使用。
 	peer chaincode install -n mycc -v 1.0 -p github.com/hyperledger/fabric/examples/chaincode/go/chaincode_example02 >&log.txt
 	res=$?
 	cat log.txt
@@ -150,6 +151,7 @@ instantiateChaincode () {
 	PEER=$1
 	setGlobals $PEER
 	# 用硬编码的方式好过用接口的方式来读写 orderer endpoint 的位置。
+	# 奇特的地方是，初始化链码需要 orderer，安装不需要 orderer，在这里 orderer 的含义是什么呢？
 	# while 'peer chaincode' command can get the orderer endpoint from the peer (if join was successful),
 	# lets supply it directly as we know it using the "-o" option
 	if [ -z "$CORE_PEER_TLS_ENABLED" -o "$CORE_PEER_TLS_ENABLED" = "false" ]; then
@@ -157,6 +159,7 @@ instantiateChaincode () {
 		# 供反射调用
 		peer chaincode instantiate -o orderer.ORDERER_DOMAIN:7050 -C $CHANNEL_NAME -n mycc -v 1.0 -c '{"Args":["init","a","100","b","200"]}' -P "OR	('Org1MSP.member','Org2MSP.member')" >&log.txt
 	else
+		# 只有真的初始化 chaincode 的时候，才指定了 orderer 和 channel name。
 		peer chaincode instantiate -o orderer.ORDERER_DOMAIN:7050 --tls $CORE_PEER_TLS_ENABLED --cafile $ORDERER_CA -C $CHANNEL_NAME -n mycc -v 1.0 -c '{"Args":["init","a","100","b","200"]}' -P "OR	('Org1MSP.member','Org2MSP.member')" >&log.txt
 	fi
 	res=$?

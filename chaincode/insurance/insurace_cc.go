@@ -46,6 +46,8 @@ func (t *Insurance) Init(stub shim.ChaincodeStubInterface) peer.Response {
 	return shim.Success(nil)
 }
 
+// 只要不产生 signedTransaction，似乎什么数据都可以放到智能合约里来跑，反正试算不消耗资源。
+// 这样可以在智能合约里面做 validation。
 // Invoke is called per transaction on the chaincode. Each transaction is
 // either a 'get' or a 'set' on the asset created by Init function. The Set
 // method may create a new asset by specifying a new key-value pair.
