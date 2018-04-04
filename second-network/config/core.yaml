@@ -2,7 +2,7 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 #
-# 这个配置文件是给 peer 用的，理论上应该放在/etc/hyperledger/fabric 下面。
+# 这个配置文件是给 peer 用的（为什么不叫peer.yaml 而是 core.yaml 呢），理论上应该放在/etc/hyperledger/fabric 下面。
 
 ###############################################################################
 #

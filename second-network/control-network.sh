@@ -32,6 +32,7 @@
 export PATH=${PWD}/../bin:${PWD}:$PATH
 # 这个环境变量很重要，这里的 export 保证这个变量是在 environment 里。可以被子进程（另一个 shell 脚本继承）。
 # 并不是所有的父进程里的 variable 都会被子进程看到的。
+# 这个环境变量保证了 configtxgen 工具会在当前目录下读 configtx.yaml。
 export FABRIC_CFG_PATH=${PWD}
 
 # Print the usage message
@@ -113,6 +114,7 @@ function clearContainers () {
 # specifically the following images are often left behind:
 # TODO list generated image naming patterns
 function removeUnwantedImages() {
+  
   # 用 awk 来截取多段输出的好例子。
   # 注意在这里我们可以看到不要乱改 peer 的名字，不然不能在这里搞到所有的 image_id。
   # $()的形式可以把命令求和为一个匿名变量。
@@ -197,6 +199,11 @@ function replacePrivateKey () {
   PRIV_KEY=$(ls *_sk)
   cd "$CURRENT_DIR"
   sed $OPTS "s/CA2_PRIVATE_KEY/${PRIV_KEY}/g" docker-compose-e2e.yaml
+  # 可选的 org3 的密钥替换
+  cd crypto-config/peerOrganizations/ORG3_DOMAIN/ca/
+  PRIV_KEY=$(ls *_sk)
+  cd "$CURRENT_DIR"
+  sed $OPTS "s/CA3_PRIVATE_KEY/${PRIV_KEY}/g" docker-compose-e2e.yaml
   # If MacOSX, remove the temporary backup of the docker-compose file
   if [ "$ARCH" == "Darwin" ]; then
     rm docker-compose-e2e.yamlt
@@ -304,7 +311,8 @@ function generateChannelArtifacts() {
   # Note: For some unknown reason (at least for now) the block file can't be
   # named orderer.genesis.block or the orderer will fail to launch!
   # 1 生成创世区块
-  configtxgen -profile TwoOrgsOrdererGenesis -outputBlock ./channel-artifacts/genesis.block
+  # 改用新的 profile 来生成三组织的创世区块
+  configtxgen -profile ThreeOrgsOrdererGenesis -outputBlock ./channel-artifacts/genesis.block
   if [ "$?" -ne 0 ]; then
     echo "Failed to generate orderer genesis block..."
     exit 1
@@ -314,7 +322,7 @@ function generateChannelArtifacts() {
   echo "### Generating channel configuration transaction 'channel.tx' ###"
   echo "#################################################################"
   # 2 生成频道配置，实际上就是 channel 事务。
-  configtxgen -profile TwoOrgsChannel -outputCreateChannelTx ./channel-artifacts/channel.tx -channelID $CHANNEL_NAME
+  configtxgen -profile ThreeOrgsChannel -outputCreateChannelTx ./channel-artifacts/channel.tx -channelID $CHANNEL_NAME
   if [ "$?" -ne 0 ]; then
     echo "Failed to generate channel configuration transaction..."
     exit 1
@@ -326,7 +334,7 @@ function generateChannelArtifacts() {
   echo "#################################################################"
   # configtxgen -help 可以看到它的各种 options。其中 outputAnchorPeersUpdate 只能在创建缺省频道（实际上自定义频道也可以），和最初建 anchor 时才可以使用。
   # 这个 channel 名和 asOrg 参数共同决定 Org1MSPanchors.tx 的内容。
-  configtxgen -profile TwoOrgsChannel -outputAnchorPeersUpdate ./channel-artifacts/Org1MSPanchors.tx -channelID $CHANNEL_NAME -asOrg Org1MSP
+  configtxgen -profile ThreeOrgsChannel -outputAnchorPeersUpdate ./channel-artifacts/Org1MSPanchors.tx -channelID $CHANNEL_NAME -asOrg Org1MSP
   if [ "$?" -ne 0 ]; then
     echo "Failed to generate anchor peer update for Org1MSP..."
     exit 1
@@ -336,10 +344,22 @@ function generateChannelArtifacts() {
   echo "#################################################################"
   echo "#######    Generating anchor peer update for Org2MSP   ##########"
   echo "#################################################################"
-  configtxgen -profile TwoOrgsChannel -outputAnchorPeersUpdate \
+  configtxgen -profile ThreeOrgsChannel -outputAnchorPeersUpdate \
   ./channel-artifacts/Org2MSPanchors.tx -channelID $CHANNEL_NAME -asOrg Org2MSP
   if [ "$?" -ne 0 ]; then
     echo "Failed to generate anchor peer update for Org2MSP..."
+    exit 1
+  fi
+  echo
+
+  echo
+  echo "#################################################################"
+  echo "#######    Generating anchor peer update for Org3MSP   ##########"
+  echo "#################################################################"
+  configtxgen -profile ThreeOrgsChannel -outputAnchorPeersUpdate \
+  ./channel-artifacts/Org3MSPanchors.tx -channelID $CHANNEL_NAME -asOrg Org3MSP
+  if [ "$?" -ne 0 ]; then
+    echo "Failed to generate anchor peer update for Org3MSP..."
     exit 1
   fi
   echo

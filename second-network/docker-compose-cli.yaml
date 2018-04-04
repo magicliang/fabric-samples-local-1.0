@@ -16,6 +16,9 @@ volumes:
   peer1.ORG1_DOMAIN:
   peer0.ORG2_DOMAIN:
   peer1.ORG2_DOMAIN:
+  # 可选的命名数据卷
+  peer0.ORG3_DOMAIN:
+  peer1.ORG3_DOMAIN:
 
 # 一个顶级网络名称，供服务之间引用
 networks:
@@ -64,6 +67,23 @@ services:
     networks:
       - byfn
 
+  # 可选的实例化的 org3 的 peer。
+  peer0.ORG3_DOMAIN:
+    container_name: peer0.ORG3_DOMAIN
+    extends:
+      file:  base/docker-compose-base.yaml
+      service: peer0.ORG3_DOMAIN
+    networks:
+      - byfn
+
+  peer1.ORG3_DOMAIN:
+    container_name: peer1.ORG3_DOMAIN
+    extends:
+      file:  base/docker-compose-base.yaml
+      service: peer1.ORG3_DOMAIN
+    networks:
+      - byfn
+
   cli:
     container_name: cli
     # 这里不继承任何配置文件，而是直接使用镜像初始化容器
@@ -71,6 +91,7 @@ services:
     tty: true
     environment:
       - GOPATH=/opt/gopath
+      # 这个地址是用来连接 var 上的 docker 守护进程的，似乎是用来启动链码容器用的？
       - CORE_VM_ENDPOINT=unix:///host/var/run/docker.sock
       - CORE_LOGGING_LEVEL=DEBUG
       - CORE_PEER_ID=cli

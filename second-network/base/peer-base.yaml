@@ -25,4 +25,5 @@ services:
       - CORE_PEER_TLS_KEY_FILE=/etc/hyperledger/fabric/tls/server.key
       - CORE_PEER_TLS_ROOTCERT_FILE=/etc/hyperledger/fabric/tls/ca.crt
     working_dir: /opt/gopath/src/github.com/hyperledger/fabric/peer
+    # 在外部节点，也是这样启动 peer 进程的。启动了以后，进程内自带各种系统链码。
     command: peer node start

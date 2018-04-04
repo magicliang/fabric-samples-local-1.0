@@ -38,6 +38,7 @@ PeerOrgs:
     #                 the CN.  By default, this is the template:
     #
     #                              "{{.Hostname}}.{{.Domain}}"
+    #                 这个 CommonName 搞不好是拼出来的完整容器名，比如peer0.org1.com 之类的。
     #
     #                 which obtains its values from the Spec.Hostname and
     #                 Org.Domain, respectively.
@@ -75,6 +76,12 @@ PeerOrgs:
   # ---------------------------------------------------------------------------
   - Name: Org2
     Domain: ORG2_DOMAIN
+    Template:
+      Count: 2
+    Users:
+      Count: 1
+  - Name: Org3
+    Domain: ORG3_DOMAIN
     Template:
       Count: 2
     Users:

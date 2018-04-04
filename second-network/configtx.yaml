@@ -16,11 +16,12 @@ Profiles:
 
     TwoOrgsOrdererGenesis:
         Orderer:
-            # 按照 YAML 的语法，这是对 anchor 的引用
+            # 按照 YAML 的语法，<<: * 是对 anchor 的引用
             <<: *OrdererDefaults
             Organizations:
                 - *OrdererOrg
         Consortiums:
+            # 这个名称似乎是默认的样例联盟，在没有联盟的时候会被拿出来用
             SampleConsortium:
                 Organizations:
                     - *Org1
@@ -32,6 +33,29 @@ Profiles:
             Organizations:
                 - *Org1
                 - *Org2
+
+    # 因为增加了 profile，所以要去改使用 profile 的地方。
+    ThreeOrgsOrdererGenesis:
+        Orderer:
+            # 按照 YAML 的语法，这是对 anchor 的引用
+            <<: *OrdererDefaults
+            Organizations:
+                - *OrdererOrg
+        Consortiums:
+            # 这里换了一个联盟来跑这个 network。
+            BusinessConsortium:
+                Organizations:
+                    - *Org1
+                    - *Org2
+                    - *Org3
+    ThreeOrgsChannel:
+        Consortium: BusinessConsortium
+        Application:
+            <<: *ApplicationDefaults
+            Organizations:
+                - *Org1
+                - *Org2
+                - *Org3 
 
 ################################################################################
 #
@@ -88,6 +112,15 @@ Organizations:
             # for cross org gossip communication.  Note, this value is only
             # encoded in the genesis block in the Application section context
             - Host: peer0.ORG2_DOMAIN
+              Port: 7051
+
+    - &Org3
+        Name: Org3MSP
+        ID: Org3MSP
+        MSPDir: crypto-config/peerOrganizations/ORG3_DOMAIN/msp
+        # 锚节点可以是数组 
+        AnchorPeers:
+            - Host: peer0.ORG3_DOMAIN
               Port: 7051
 
 ################################################################################
