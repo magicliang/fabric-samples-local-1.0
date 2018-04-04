@@ -44,14 +44,25 @@ setGlobals () {
 			# 此处有重复，疑为错误。但 github 上原版的代码就是这样写的。
 			CORE_PEER_MSPCONFIGPATH=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/ORG1_DOMAIN/users/Admin@ORG1_DOMAIN/msp
 		fi
-	else
+	elif [ $1 -eq 2 -o $1 -eq 3 ] ; then
 		CORE_PEER_LOCALMSPID="Org2MSP"
+		# 共用一个 tls ca
 		CORE_PEER_TLS_ROOTCERT_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/ORG2_DOMAIN/peers/peer0.ORG2_DOMAIN/tls/ca.crt
+		# 共用一个 msp
 		CORE_PEER_MSPCONFIGPATH=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/ORG2_DOMAIN/users/Admin@ORG2_DOMAIN/msp
 		if [ $1 -eq 2 ]; then
 			CORE_PEER_ADDRESS=peer0.ORG2_DOMAIN:7051
 		else
 			CORE_PEER_ADDRESS=peer1.ORG2_DOMAIN:7051
+		fi
+	else
+		CORE_PEER_LOCALMSPID="Org3MSP"
+		CORE_PEER_TLS_ROOTCERT_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/ORG3_DOMAIN/peers/peer0.ORG3_DOMAIN/tls/ca.crt
+		CORE_PEER_MSPCONFIGPATH=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/ORG3_DOMAIN/users/Admin@ORG3_DOMAIN/msp
+		if [ $1 -eq 4 ]; then
+			CORE_PEER_ADDRESS=peer0.ORG3_DOMAIN:7051
+		else
+			CORE_PEER_ADDRESS=peer1.ORG3_DOMAIN:7051
 		fi
 	fi
 
@@ -124,7 +135,7 @@ joinWithRetry () {
 }
 
 joinChannel () {
-	for ch in 0 1 2 3; do
+	for ch in 0 1 2 3 4 5; do
 		setGlobals $ch
 		joinWithRetry $ch
 		echo "===================== PEER$ch joined on the channel \"$CHANNEL_NAME\" ===================== "
@@ -230,6 +241,8 @@ echo "Updating anchor peers for org1..."
 updateAnchorPeers 0
 echo "Updating anchor peers for org2..."
 updateAnchorPeers 2
+echo "Updating anchor peers for org3..."
+updateAnchorPeers 4
 
 # 只在 peer0 和 peer2上安装合约
 ## Install chaincode on Peer0/Org1 and Peer2/Org2
@@ -237,6 +250,10 @@ echo "Installing chaincode on org1/peer0..."
 installChaincode 0
 echo "Install chaincode on org2/peer2..."
 installChaincode 2
+echo "Install chaincode on org3/peer4..."
+installChaincode 4
+echo "Install chaincode on org3/peer5..."
+installChaincode 5
 
 # 只在 peer2上初始化合约
 #Instantiate chaincode on Peer2/Org2
@@ -262,6 +279,11 @@ installChaincode 3
 #Query on chaincode on Peer3/Org2, check if the result is 90
 echo "Querying chaincode on org2/peer3..."
 chaincodeQuery 3 90
+
+echo "Querying chaincode on org3/peer4..."
+chaincodeQuery 4 90
+echo "Querying chaincode on org3/peer5..."
+chaincodeQuery 5 90
 
 echo
 echo "========= All GOOD, execution completed =========== "
