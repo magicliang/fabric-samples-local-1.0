@@ -56,7 +56,7 @@ setGlobals () {
 			CORE_PEER_ADDRESS=peer1.ORG2_DOMAIN:7051
 		fi
 	else
-		CORE_PEER_LOCALMSPID="Org3MSP"
+		CORE_PEER_LOCALMSPID="Org3-MSP"
 		CORE_PEER_TLS_ROOTCERT_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/ORG3_DOMAIN/peers/peer0.ORG3_DOMAIN/tls/ca.crt
 		CORE_PEER_MSPCONFIGPATH=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/ORG3_DOMAIN/users/Admin@ORG3_DOMAIN/msp
 		if [ $1 -eq 4 ]; then

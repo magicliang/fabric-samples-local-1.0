@@ -139,7 +139,7 @@ services:
       - CORE_PEER_ADDRESS=peer0.ORG3_DOMAIN:7051
       - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer0.ORG3_DOMAIN:7051
       - CORE_PEER_GOSSIP_BOOTSTRAP=peer0.ORG3_DOMAIN:7051
-      - CORE_PEER_LOCALMSPID=Org3MSP
+      - CORE_PEER_LOCALMSPID=Org3-MSP
     volumes:
         - /var/run/:/host/var/run/
         - ../crypto-config/peerOrganizations/ORG3_DOMAIN/peers/peer0.ORG3_DOMAIN/msp:/etc/hyperledger/fabric/msp
@@ -159,7 +159,7 @@ services:
       - CORE_PEER_ADDRESS=peer1.ORG3_DOMAIN:7051
       - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer1.ORG3_DOMAIN:7051
       - CORE_PEER_GOSSIP_BOOTSTRAP=peer1.ORG3_DOMAIN:7051
-      - CORE_PEER_LOCALMSPID=Org3MSP
+      - CORE_PEER_LOCALMSPID=Org3-MSP
     volumes:
         - /var/run/:/host/var/run/
         - ../crypto-config/peerOrganizations/ORG3_DOMAIN/peers/peer1.ORG3_DOMAIN/msp:/etc/hyperledger/fabric/msp

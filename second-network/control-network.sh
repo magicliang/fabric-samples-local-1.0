@@ -354,12 +354,12 @@ function generateChannelArtifacts() {
 
   echo
   echo "#################################################################"
-  echo "#######    Generating anchor peer update for Org3MSP   ##########"
+  echo "#######    Generating anchor peer update for Org3-MSP   ##########"
   echo "#################################################################"
   configtxgen -profile ThreeOrgsChannel -outputAnchorPeersUpdate \
-  ./channel-artifacts/Org3MSPanchors.tx -channelID $CHANNEL_NAME -asOrg Org3MSP
+  ./channel-artifacts/Org3-MSPanchors.tx -channelID $CHANNEL_NAME -asOrg Org3MSP
   if [ "$?" -ne 0 ]; then
-    echo "Failed to generate anchor peer update for Org3MSP..."
+    echo "Failed to generate anchor peer update for Org3-MSP..."
     exit 1
   fi
   echo
