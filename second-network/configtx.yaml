@@ -13,7 +13,7 @@
 #
 ################################################################################
 Profiles:
-
+    # 这个 profile 是用来定义 consortium 的。远在产生频道以前，就定义 orderer 和组织之间的关系。
     TwoOrgsOrdererGenesis:
         Orderer:
             # 按照 YAML 的语法，<<: * 是对 anchor 的引用
@@ -26,6 +26,7 @@ Profiles:
                 Organizations:
                     - *Org1
                     - *Org2
+    # 这两个 profile 则是产生频道用的。换言之，一套 orderer 和多个组织，可以产生多个 consortium。
     TwoOrgsChannel:
         Consortium: SampleConsortium
         Application:
