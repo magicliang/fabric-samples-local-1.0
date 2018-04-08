@@ -321,7 +321,7 @@ function generateChannelArtifacts() {
   echo "#################################################################"
   echo "### Generating channel configuration transaction 'channel.tx' ###"
   echo "#################################################################"
-  # 2 生成频道配置，实际上就是 channel 事务。
+  # 2 生成频道配置，实际上就是 channel 事务。这一步生成的tx文件，是给cli里update channel用的。
   configtxgen -profile ThreeOrgsChannel -outputCreateChannelTx ./channel-artifacts/channel.tx -channelID $CHANNEL_NAME
   if [ "$?" -ne 0 ]; then
     echo "Failed to generate channel configuration transaction..."
@@ -333,7 +333,7 @@ function generateChannelArtifacts() {
   echo "#######    Generating anchor peer update for Org1MSP   ##########"
   echo "#################################################################"
   # configtxgen -help 可以看到它的各种 options。其中 outputAnchorPeersUpdate 只能在创建缺省频道（实际上自定义频道也可以），和最初建 anchor 时才可以使用。
-  # 这个 channel 名和 asOrg 参数共同决定 Org1MSPanchors.tx 的内容。
+  # 这个 channel 名和 asOrg 参数共同决定 Org1MSPanchors.tx 的内容。这一步生成的tx文件，是给cli里update channel用的。
   configtxgen -profile ThreeOrgsChannel -outputAnchorPeersUpdate ./channel-artifacts/Org1MSPanchors.tx -channelID $CHANNEL_NAME -asOrg Org1MSP
   if [ "$?" -ne 0 ]; then
     echo "Failed to generate anchor peer update for Org1MSP..."
