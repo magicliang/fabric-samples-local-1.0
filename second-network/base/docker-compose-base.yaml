@@ -78,6 +78,7 @@ services:
         - /var/run/:/host/var/run/
         - ../crypto-config/peerOrganizations/ORG1_DOMAIN/peers/peer1.ORG1_DOMAIN/msp:/etc/hyperledger/fabric/msp
         - ../crypto-config/peerOrganizations/ORG1_DOMAIN/peers/peer1.ORG1_DOMAIN/tls:/etc/hyperledger/fabric/tls
+        # 把外部的匿名数据卷，映射到peer容器内到生产数据卷上
         - peer1.ORG1_DOMAIN:/var/hyperledger/production
 
     ports:
@@ -96,6 +97,7 @@ services:
       - CORE_PEER_GOSSIP_BOOTSTRAP=peer0.ORG2_DOMAIN:7051
       - CORE_PEER_LOCALMSPID=Org2MSP
     volumes:
+        # 这里的数据卷映射没有把etc全部映射进去，足以证明 peer 内有原生的 etc。
         - /var/run/:/host/var/run/
         - ../crypto-config/peerOrganizations/ORG2_DOMAIN/peers/peer0.ORG2_DOMAIN/msp:/etc/hyperledger/fabric/msp
         - ../crypto-config/peerOrganizations/ORG2_DOMAIN/peers/peer0.ORG2_DOMAIN/tls:/etc/hyperledger/fabric/tls

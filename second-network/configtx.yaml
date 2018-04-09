@@ -116,7 +116,7 @@ Organizations:
               Port: 7051
 
     - &Org3
-        # 这个 MSP name取什么名字，完全无碍于MSP ID。但会影响 configtxgen 的 -asOrg 参数，进而影响 anchor 节点 configtx 的生成。
+        # 这个组织 name取什么名字，完全无碍于MSP ID。但会影响 configtxgen 的 -asOrg 参数，进而影响 anchor 节点 configtx 的生成。
         Name: Org3MSP
         # 这里这个 MSP ID 完全可以不按照惯例来，也完全不影响整个网络的启动，也完全不受 crypto-config.yaml 的配置文件影响。
         ID: Org3-MSP

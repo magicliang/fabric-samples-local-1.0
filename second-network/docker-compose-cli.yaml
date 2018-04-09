@@ -26,6 +26,8 @@ networks:
 
 services:
   orderer.ORDERER_DOMAIN:
+    # 用这个属性让容器内的标准输出放到我们的主控制台来
+    tty: true
     extends:
       file:   base/docker-compose-base.yaml
       service: orderer.ORDERER_DOMAIN
@@ -83,7 +85,7 @@ services:
       service: peer1.ORG3_DOMAIN
     networks:
       - byfn
-
+  # 这个文件改环境变量配置的只有 cli。
   cli:
     container_name: cli
     # 这里不继承任何配置文件，而是直接使用镜像初始化容器
@@ -102,6 +104,7 @@ services:
       - CORE_PEER_TLS_KEY_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/ORG1_DOMAIN/peers/peer0.ORG1_DOMAIN/tls/server.key
       - CORE_PEER_TLS_ROOTCERT_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/ORG1_DOMAIN/peers/peer0.ORG1_DOMAIN/tls/ca.crt
       - CORE_PEER_MSPCONFIGPATH=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/ORG1_DOMAIN/users/Admin@ORG1_DOMAIN/msp
+    # cli 特意跑到peer文件夹里来  
     working_dir: /opt/gopath/src/github.com/hyperledger/fabric/peer
     # 容器运行的时候，就会在内部的 console 里启动这段命令。类似我们经常 docker run 使用的 /bin/bash 一样。
     # 在这里我们传导了两个关键的环境变量进去，一个频道名，一个延迟。这也是目前唯二的还能在 cli 容器启动时改变的东西了。
