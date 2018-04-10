@@ -79,16 +79,17 @@ services:
       - byfn
 
   peer1.ORG3_DOMAIN:
+    tty: true
     container_name: peer1.ORG3_DOMAIN
     extends:
       file:  base/docker-compose-base.yaml
       service: peer1.ORG3_DOMAIN
     networks:
       - byfn
-  # 这个文件改环境变量配置的只有 cli。
+  # 这个文件改环境变量配置的只有 cli。实际上也只有这里 cli 才作为service第一次被定义出来。
   cli:
     container_name: cli
-    # 这里不继承任何配置文件，而是直接使用镜像初始化容器
+    # 这里不继承任何配置文件，而是直接使用镜像初始化容器。用tools镜像来做 cli 容器。
     image: hyperledger/fabric-tools:$IMAGE_TAG
     tty: true
     environment:
