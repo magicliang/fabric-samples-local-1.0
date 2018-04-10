@@ -137,6 +137,7 @@ function networkUp () {
     generateChannelArtifacts
   fi
   if [ "${IF_COUCHDB}" == "couchdb" ]; then
+      # 可以使用两个 -f 来启动 docker-compose
       IMAGE_TAG=$IMAGETAG CHANNEL_NAME=$CHANNEL_NAME TIMEOUT=$CLI_TIMEOUT DELAY=$CLI_DELAY docker-compose -f $COMPOSE_FILE -f $COMPOSE_FILE_COUCH up -d 2>&1
   else
       # 这一行让 Docker-Compose 来按照配置文件装配容器配置，生成由容器组成的项目网络
