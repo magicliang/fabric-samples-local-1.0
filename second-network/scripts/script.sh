@@ -80,6 +80,7 @@ createChannel() {
   		# 2 实际上我们从这一步开始，就知道了 orderer 才是最先 join 进这个 channel 里的一个节点。
   		# 3 几乎所有的频道、peer、orderer 节点相关的操作，都要依靠这个 peer channel 命令开头的系列命令。
   		# 4 channel id 就是 channel name。
+  		# 5 这一步在 peer 上也可以做，只要能摸到 orderer 就行了。
 		peer channel create -o orderer.ORDERER_DOMAIN:7050 -c $CHANNEL_NAME -f ./channel-artifacts/channel.tx >&log.txt
 	else
 		# 注意，如果需要打开 tls，那么这个--cafile选项特别特别重要。

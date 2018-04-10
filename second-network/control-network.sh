@@ -141,11 +141,12 @@ function networkUp () {
   else
       # 这一行让 Docker-Compose 来按照配置文件装配容器配置，生成由容器组成的项目网络
       # cli 容器起来以后，会自己去创建频道、一个一个地把容器加入网络中。一个一个地初始化链码，一个一个地测试链码。
+      # 如果去掉 -d，则所有容器的 log 都会喷薄而出。而且会 hang 住当前 console ，一退出就会整个 compose 都退出。
       IMAGE_TAG=$IMAGETAG CHANNEL_NAME=$CHANNEL_NAME TIMEOUT=$CLI_TIMEOUT DELAY=$CLI_DELAY docker-compose -f $COMPOSE_FILE up -d 2>&1
   fi
   if [ $? -ne 0 ]; then
     echo "ERROR !!!! Unable to start network"
-    # 这个命令就是去读一个容器启动的 command 在 console 里的输出。
+    # 这个命令就是去读一个容器启动的 command 在 console 里的输出。默认的情况是所有容器都是-d的后台隐秘输出日志，在这里专门用docker logs来取 cli的输出，与tty的配置无关。
     docker logs -f cli
     exit 1
   fi

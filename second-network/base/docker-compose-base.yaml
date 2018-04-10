@@ -78,7 +78,7 @@ services:
         - /var/run/:/host/var/run/
         - ../crypto-config/peerOrganizations/ORG1_DOMAIN/peers/peer1.ORG1_DOMAIN/msp:/etc/hyperledger/fabric/msp
         - ../crypto-config/peerOrganizations/ORG1_DOMAIN/peers/peer1.ORG1_DOMAIN/tls:/etc/hyperledger/fabric/tls
-        # 把外部的匿名数据卷，映射到peer容器内到生产数据卷上
+        # 把外部的匿名数据卷，映射到peer容器内到生产数据卷上。这样容器通过docker compose 不断重启以后，数据还可以保持。
         - peer1.ORG1_DOMAIN:/var/hyperledger/production
 
     ports:
