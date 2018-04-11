@@ -15,7 +15,7 @@ DELAY="$2"
 : ${TIMEOUT:="60"}
 COUNTER=1
 MAX_RETRY=5
-# 是不是使用 TLS，其实只与 orderer 和 channel 有关。
+# 是不是使用 TLS，其实只与 orderer 和 channel 有关。orderer 只有在用到 tls 的时候，才出现 ca 的使用。
 ORDERER_CA=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/ordererOrganizations/ORDERER_DOMAIN/orderers/orderer.ORDERER_DOMAIN/msp/tlscacerts/tlsca.ORDERER_DOMAIN-cert.pem
 
 echo "Channel name : "$CHANNEL_NAME
