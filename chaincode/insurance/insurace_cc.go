@@ -4,6 +4,8 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+// chaincode 在 devmode下似乎是可以独立编译执行的，但不和channel绑定，也就无法读写 ledger。
+// package 也必须是 main。每个chaincode自己就是一个独立的进程 entrypoint。
 package main
 
 import (
@@ -171,7 +173,7 @@ func getHistory(stub shim.ChaincodeStubInterface, args []string) (string, error)
 }
 
 
-
+// 这个main 函数可以说是必须要有的
 // main function starts up the chaincode in the container during instantiate
 func main() {
 	if err := shim.Start(new(Insurance)); err != nil {

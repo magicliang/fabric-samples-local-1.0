@@ -47,6 +47,7 @@ func (t *SimpleChaincode) Init(stub shim.ChaincodeStubInterface) pb.Response {
 
 	// Initialize the chaincode
 	A = args[0]
+	// 这是把字符串变成整数
 	Aval, err = strconv.Atoi(args[1])
 	if err != nil {
 		return shim.Error("Expecting integer value for asset holding")
@@ -121,6 +122,7 @@ func (t *SimpleChaincode) invoke(stub shim.ChaincodeStubInterface, args []string
 	if Bvalbytes == nil {
 		return shim.Error("Entity not found")
 	}
+	// 从字节数组转到字符串再转到整数
 	Bval, _ = strconv.Atoi(string(Bvalbytes))
 
 	// Perform the execution
@@ -133,6 +135,7 @@ func (t *SimpleChaincode) invoke(stub shim.ChaincodeStubInterface, args []string
 	fmt.Printf("Aval = %d, Bval = %d\n", Aval, Bval)
 
 	// Write the state back to the ledger
+	// 从字符串转到整数再转到字节数组。
 	err = stub.PutState(A, []byte(strconv.Itoa(Aval)))
 	if err != nil {
 		return shim.Error(err.Error())
