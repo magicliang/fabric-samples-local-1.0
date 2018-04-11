@@ -24,6 +24,7 @@ services:
       - CORE_PEER_TLS_CERT_FILE=/etc/hyperledger/fabric/tls/server.crt
       - CORE_PEER_TLS_KEY_FILE=/etc/hyperledger/fabric/tls/server.key
       - CORE_PEER_TLS_ROOTCERT_FILE=/etc/hyperledger/fabric/tls/ca.crt
+    # opt 明明是 go 的库目录，为什么这这里变成了工作目录呢？
     working_dir: /opt/gopath/src/github.com/hyperledger/fabric/peer
     # 在外部节点，也是这样启动 peer 进程的。启动了以后，进程内自带各种系统链码。
     command: peer node start
