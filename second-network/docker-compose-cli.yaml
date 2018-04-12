@@ -96,7 +96,7 @@ services:
     tty: true
     environment:
       - GOPATH=/opt/gopath
-      # 这个地址是用来连接 var 上的 docker 守护进程的，似乎是用来启动链码容器用的？
+      # 这个地址是用来连接 var 上的 docker 守护进程的，是用来启动什么容器的呢？
       - CORE_VM_ENDPOINT=unix:///host/var/run/docker.sock
       - CORE_LOGGING_LEVEL=DEBUG
       - CORE_PEER_ID=cli

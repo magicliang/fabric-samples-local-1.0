@@ -9,6 +9,7 @@ services:
   peer-base:
     image: hyperledger/fabric-peer:$IMAGE_TAG
     environment:
+      # peer 连接本机的 docker 的守护进程，这样才能创建链码容器。
       - CORE_VM_ENDPOINT=unix:///host/var/run/docker.sock
       # 用默认的网桥网络来启动链码容器。
       # the following setting starts chaincode containers on the same
