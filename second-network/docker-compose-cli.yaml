@@ -34,7 +34,7 @@ services:
     # 在这里虽然可以覆盖 container name，但有必要么？
     container_name: orderer.ORDERER_DOMAIN
     networks:
-      # 这是要加入的网络名称
+      # 这是要加入的网络名称，可以加入多个网络
       - byfn
 
   peer0.ORG1_DOMAIN:
